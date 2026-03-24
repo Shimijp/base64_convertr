@@ -1,13 +1,25 @@
 mod base64_converter;
 mod utils;
 mod errors;
+mod gui;
 
-fn main() {
-    println!("Hello, world!");
-    let str = "aHR0cHM6Ly8xMzM3eC50by90b3JyZW50LzU2NDI5MjIvVGhlLUxlZ2VuZC1vZi1aZWxkYS1UZWFycy1vZi10aGUtS2luZ2RvbS1TV0lUQ0gv";
-    let base64 = base64_converter::Base64Converter::new(str, crate::utils::Bases::Ascii).expect("Failed to create Base64Converter");
+use gui::Converter;
+fn main()-> eframe::Result<()> {
 
-    let str_result = base64.convert(str);
-    println!("Decoded string: {}", str_result);
+
+    let options = eframe::NativeOptions
+    {
+        viewport: egui::ViewportBuilder::default()
+            .with_inner_size(egui::vec2(400.0, 300.0)),
+        ..Default::default()
+    };
+    eframe::run_native(
+        "Converter",
+        options,
+        Box::new(|_ctx| Ok(Box::new(Converter::default()))),
+    )
+
+
+
 
 }

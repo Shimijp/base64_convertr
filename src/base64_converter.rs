@@ -12,23 +12,24 @@ impl Base64Converter {
     pub fn new(original: &str,mew_base: Bases ) -> Result<Self, Errors> {
         let chars = original.as_bytes();
         match  is_legal_base64_string(original){
-            true => Ok(Base64Converter{
+            Ok(()) => Ok(Base64Converter{
                 chars: chars.to_vec(),
                 base: mew_base,
                 padding: get_padding(original),
             }),
-            false => Err(Errors::IllegalBase64String),
+            Err(Errors::IllegalBase64String) => Err(Errors::IllegalBase64String) ,
+            Err(Errors::IllegalBase64Char(c)) => Err(Errors::IllegalBase64Char(c)),
 
         }
     }
-    pub fn convert(&self, input: &str) -> String {
+    pub fn convert(&self) -> String {
         //TODO
         let mut string = String::new();
 
         match  self.base {
 
             Bases::Ascii => string = convert_base64_to_ascii(&self.chars, &self.padding),
-            _ => string.push_str(""),
+            _ => string.push_str("not implemented yet"),
 
         }
         string

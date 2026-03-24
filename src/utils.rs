@@ -1,3 +1,5 @@
+use crate::errors::Errors;
+
 pub const DECODE_TABLE: [u8; 256] = [
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, // 0-15
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, // 16-31
@@ -42,17 +44,18 @@ pub(crate) fn get_padding(base64: &str) -> Padding {
 fn is_legal_base64_char(c: char) -> bool {
     c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '='
 }
-pub(crate) fn is_legal_base64_string(string: &str) -> bool {
+pub(crate) fn is_legal_base64_string(string: &str) -> Result<() , Errors> {
     if string.len() % 4 != 0
     {
-        false;
+        println!("String length is not a multiple of 4: {}", string.len());
+        return Err(Errors::IllegalBase64String);
     }
     for char in string.chars() {
         if !is_legal_base64_char(char)
         {
             println!("Illegal character found: {}", char);
-            false;
+            return Err(Errors::IllegalBase64Char(char));
         }
     }
-    true
+    Ok(())
 }
